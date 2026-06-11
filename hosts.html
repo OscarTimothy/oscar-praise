@@ -241,9 +241,8 @@
     a.click();
   });
 
-  // auto-refresh while open
+  // load once on open; refresh is manual (the free store caps daily requests, so we don't poll)
   if (sessionStorage.getItem('op_host') === '1') load();
-  setInterval(function () { if (dash.style.display === 'block') load(); }, 25000);
 </script>
 </body>
 </html>
