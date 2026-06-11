@@ -102,6 +102,8 @@
   .in .d7 { transition-delay: 620ms; }
   @media (prefers-reduced-motion: reduce) {
     .rise, .in .rise { opacity: 1; transform: none; filter: none; transition: none; }
+    .petals { display: none; }
+    .sheen::before, .crest .ring, .ask .amount .cur { animation: none; }
   }
 
   /* ---------- monogram crest ---------- */
@@ -351,6 +353,89 @@
     background: rgba(255,255,255,0.35);
   }
 
+  /* ---------- drifting rose petals ---------- */
+  .petals { position: fixed; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+  .petal {
+    position: absolute;
+    top: -8vh;
+    width: 13px; height: 13px;
+    background: radial-gradient(125% 125% at 30% 20%, #f3d4d8 0%, #dba3ac 55%, #c98b95 100%);
+    border-radius: 62% 8% 62% 8%;
+    opacity: 0;
+    will-change: transform, opacity;
+    animation: petalfall linear infinite;
+  }
+  @keyframes petalfall {
+    0%   { transform: translate3d(0, -8vh, 0) rotate(0deg); opacity: 0; }
+    8%   { opacity: 0.85; }
+    92%  { opacity: 0.85; }
+    100% { transform: translate3d(var(--drift, 24px), 112vh, 0) rotate(560deg); opacity: 0; }
+  }
+  .petal:nth-child(1)  { left: 5%;  --drift: 26px;  width: 11px; height: 11px; animation-duration: 15s; animation-delay: 0s;   }
+  .petal:nth-child(2)  { left: 14%; --drift: -34px; width: 15px; height: 15px; animation-duration: 19s; animation-delay: 4s;   }
+  .petal:nth-child(3)  { left: 23%; --drift: 40px;  width: 9px;  height: 9px;  animation-duration: 13s; animation-delay: 7s;   }
+  .petal:nth-child(4)  { left: 33%; --drift: -22px; width: 13px; height: 13px; animation-duration: 21s; animation-delay: 1.5s; }
+  .petal:nth-child(5)  { left: 43%; --drift: 30px;  width: 16px; height: 16px; animation-duration: 17s; animation-delay: 9s;   }
+  .petal:nth-child(6)  { left: 52%; --drift: -38px; width: 10px; height: 10px; animation-duration: 14s; animation-delay: 3s;   }
+  .petal:nth-child(7)  { left: 62%; --drift: 20px;  width: 14px; height: 14px; animation-duration: 20s; animation-delay: 6s;   }
+  .petal:nth-child(8)  { left: 71%; --drift: -28px; width: 12px; height: 12px; animation-duration: 16s; animation-delay: 11s;  }
+  .petal:nth-child(9)  { left: 80%; --drift: 36px;  width: 9px;  height: 9px;  animation-duration: 18s; animation-delay: 2s;   }
+  .petal:nth-child(10) { left: 88%; --drift: -24px; width: 15px; height: 15px; animation-duration: 22s; animation-delay: 8s;   }
+  .petal:nth-child(11) { left: 95%; --drift: 18px;  width: 11px; height: 11px; animation-duration: 15s; animation-delay: 13s;  }
+  .petal:nth-child(12) { left: 38%; --drift: -30px; width: 10px; height: 10px; animation-duration: 24s; animation-delay: 16s;  }
+  /* soften a few into cream/gold tones */
+  .petal:nth-child(3), .petal:nth-child(8)  { background: radial-gradient(125% 125% at 30% 20%, #fbeed4 0%, #ecd3a6 60%, #d8bd84 100%); }
+  .petal:nth-child(5), .petal:nth-child(11) { background: radial-gradient(125% 125% at 30% 20%, #f8e4e6 0%, #e9c2c7 60%, #dba6ad 100%); }
+
+  /* ---------- gold sheen sweep across card ---------- */
+  .sheen { position: absolute; inset: 0; border-radius: 18px; overflow: hidden; pointer-events: none; }
+  .sheen::before {
+    content: "";
+    position: absolute;
+    top: -60%; left: 0;
+    width: 36%; height: 220%;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.5) 50%, transparent 100%);
+    transform: rotate(18deg) translateX(-260%);
+    animation: sheen 11s ease-in-out 2.4s infinite;
+  }
+  @keyframes sheen {
+    0%   { transform: rotate(18deg) translateX(-260%); }
+    14%  { transform: rotate(18deg) translateX(420%); }
+    100% { transform: rotate(18deg) translateX(420%); }
+  }
+
+  /* ---------- breathing monogram + amount glow ---------- */
+  .crest .ring { animation: breathe 5s ease-in-out infinite; }
+  @keyframes breathe {
+    0%, 100% { box-shadow: inset 0 0 0 4px rgba(248,241,226,0.9), inset 0 0 0 5px rgba(203,176,121,0.32), 0 0 0 0 rgba(176,141,79,0); }
+    50%      { box-shadow: inset 0 0 0 4px rgba(248,241,226,0.9), inset 0 0 0 5px rgba(203,176,121,0.5),  0 0 20px 2px rgba(176,141,79,0.2); }
+  }
+  .ask .amount .cur { animation: curglow 5s ease-in-out infinite; }
+  @keyframes curglow {
+    0%, 100% { text-shadow: 0 0 0 rgba(176,141,79,0); }
+    50%      { text-shadow: 0 0 12px rgba(176,141,79,0.45); }
+  }
+
+  /* ---------- pay-in-person note ---------- */
+  .inperson {
+    margin-top: 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    text-align: left;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 15.5px;
+    line-height: 1.45;
+    color: var(--ink);
+    background: linear-gradient(165deg, rgba(255,253,247,0.7), rgba(236,211,214,0.28));
+    border: 1px solid rgba(203,176,121,0.4);
+    border-radius: 15px;
+    padding: 13px 16px;
+    box-shadow: inset 0 1px 1px rgba(255,255,255,0.6);
+  }
+  .inperson svg { width: 20px; height: 20px; flex: 0 0 20px; margin-top: 2px; }
+
   @media (max-width: 420px) {
     .core { padding: 34px 22px 30px; }
     .names { font-size: 42px; }
@@ -359,10 +444,17 @@
 </style>
 </head>
 <body>
+  <div class="petals" aria-hidden="true">
+    <span class="petal"></span><span class="petal"></span><span class="petal"></span>
+    <span class="petal"></span><span class="petal"></span><span class="petal"></span>
+    <span class="petal"></span><span class="petal"></span><span class="petal"></span>
+    <span class="petal"></span><span class="petal"></span><span class="petal"></span>
+  </div>
   <main class="shell">
     <div class="core" id="core">
       <span class="corner tl"></span><span class="corner tr"></span>
       <span class="corner bl"></span><span class="corner br"></span>
+      <div class="sheen" aria-hidden="true"></div>
 
       <div class="crest rise d1">
         <span class="ring"><span class="mono">O<span class="amp">&amp;</span>P</span></span>
@@ -431,6 +523,13 @@
           <span class="copied" id="copiedFlag">Copied ✓</span>
           <span class="go" id="zelleGo"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg></span>
         </div>
+      </div>
+
+      <div class="inperson rise d7">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#b08d4f" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 3v7a2 2 0 0 0 4 0V3M8 10v11M18 3c-1.6 0-2.5 1.8-2.5 4.5S16.4 12 18 12v9"/>
+        </svg>
+        <span>Prefer to pay in person? You're always welcome to settle the $80 at the restaurant on the evening of the dinner.</span>
       </div>
 
       <div class="foot rise d7">
