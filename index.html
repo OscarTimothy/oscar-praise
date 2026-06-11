@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Oscar &amp; Praise — Engagement Dinner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Pinyon+Script&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --paper:        #f8f1e2;
+    --paper-hi:     #fdf8ee;
+    --paper-lo:     #f1e6cf;
+    --shell:        #efe3c9;
+    --burgundy:     #823542;
+    --burgundy-deep:#5e2530;
+    --rose:         #c98b95;
+    --rose-soft:    #ecd3d6;
+    --gold:         #b08d4f;
+    --gold-hi:      #d8bd84;
+    --gold-line:    #cbb079;
+    --ink:          #6a513d;
+    --ink-soft:     #8a7257;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background:
+      radial-gradient(130% 100% at 50% 0%, #ecdcbd 0%, #e3d1b0 55%, #d9c4a0 100%);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Fixed film-grain overlay — never on scrolling content */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  body {
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 28px 16px 40px;
+  }
+
+  /* ---------- Double-bezel card (outer shell + inner core) ---------- */
+  .shell {
+    width: 100%;
+    max-width: 452px;
+    background: linear-gradient(160deg, #f3e7cd 0%, var(--shell) 100%);
+    border: 1px solid rgba(176, 141, 79, 0.45);
+    border-radius: 26px;
+    padding: 9px;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.7) inset,
+      0 30px 70px -28px rgba(94, 60, 30, 0.45),
+      0 8px 22px -16px rgba(94, 60, 30, 0.3);
+  }
+
+  .core {
+    position: relative;
+    background:
+      radial-gradient(135% 90% at 50% -8%, var(--paper-hi) 0%, var(--paper) 50%, var(--paper-lo) 100%);
+    border: 1px solid rgba(203, 176, 121, 0.55);
+    border-radius: 18px;
+    padding: 40px 30px 34px;
+    box-shadow: inset 0 1px 1px rgba(255,255,255,0.6);
+    overflow: hidden;
+  }
+
+  /* corner hairline ornaments */
+  .corner {
+    position: absolute;
+    width: 26px; height: 26px;
+    border: 1px solid var(--gold-line);
+    opacity: 0.8;
+  }
+  .corner.tl { top: 12px; left: 12px; border-right: 0; border-bottom: 0; border-radius: 6px 0 0 0; }
+  .corner.tr { top: 12px; right: 12px; border-left: 0; border-bottom: 0; border-radius: 0 6px 0 0; }
+  .corner.bl { bottom: 12px; left: 12px; border-right: 0; border-top: 0; border-radius: 0 0 0 6px; }
+  .corner.br { bottom: 12px; right: 12px; border-left: 0; border-top: 0; border-radius: 0 0 6px 0; }
+
+  /* ---------- entrance choreography ---------- */
+  .rise { opacity: 0; transform: translateY(18px); filter: blur(6px); }
+  .in .rise { opacity: 1; transform: translateY(0); filter: blur(0); transition: all 900ms cubic-bezier(0.22, 0.61, 0.36, 1); }
+  .in .d1 { transition-delay: 80ms; }
+  .in .d2 { transition-delay: 160ms; }
+  .in .d3 { transition-delay: 240ms; }
+  .in .d4 { transition-delay: 340ms; }
+  .in .d5 { transition-delay: 440ms; }
+  .in .d6 { transition-delay: 540ms; }
+  .in .d7 { transition-delay: 620ms; }
+  @media (prefers-reduced-motion: reduce) {
+    .rise, .in .rise { opacity: 1; transform: none; filter: none; transition: none; }
+  }
+
+  /* ---------- monogram crest ---------- */
+  .crest {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+  .crest .ring {
+    width: 58px; height: 58px;
+    border: 1px solid var(--gold-line);
+    border-radius: 50%;
+    display: grid; place-items: center;
+    box-shadow: inset 0 0 0 4px rgba(248,241,226,0.9), inset 0 0 0 5px rgba(203,176,121,0.35);
+  }
+  .crest .mono {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 22px;
+    letter-spacing: 0.04em;
+    color: var(--burgundy);
+  }
+  .crest .mono .amp { font-family: 'Pinyon Script', cursive; color: var(--gold); font-size: 20px; padding: 0 1px; }
+
+  /* ---------- header ---------- */
+  .eyebrow {
+    text-align: center;
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gold);
+    padding-left: 0.42em;
+    margin-bottom: 14px;
+  }
+
+  .names {
+    text-align: center;
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 47px;
+    color: var(--burgundy);
+    line-height: 0.98;
+    letter-spacing: 0.06em;
+  }
+  .names .amp {
+    display: block;
+    font-family: 'Pinyon Script', cursive;
+    font-size: 40px;
+    color: var(--gold);
+    line-height: 1;
+    margin: 6px 0 4px;
+    letter-spacing: 0;
+    font-weight: 400;
+  }
+
+  .occasion {
+    text-align: center;
+    font-family: 'Pinyon Script', cursive;
+    font-size: 33px;
+    color: var(--burgundy-deep);
+    margin-top: 10px;
+    line-height: 1;
+  }
+
+  /* botanical divider */
+  .botanical {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0 18px;
+  }
+  .botanical svg { width: 168px; height: auto; }
+
+  .details {
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--ink);
+    letter-spacing: 0.01em;
+  }
+  .details .venue {
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--burgundy);
+    letter-spacing: 0.02em;
+  }
+  .details sup { font-size: 0.6em; }
+
+  /* ---------- the ask ---------- */
+  .ask {
+    margin: 26px auto 4px;
+    text-align: center;
+  }
+  .ask .eyebrow { margin-bottom: 6px; }
+  .ask .amount {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 64px;
+    line-height: 1;
+    color: var(--burgundy);
+    letter-spacing: 0.01em;
+  }
+  .ask .amount .cur { font-size: 34px; vertical-align: top; color: var(--gold); position: relative; top: 6px; font-weight: 400; }
+  .ask .per {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-top: 4px;
+  }
+  .ask .note {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--ink);
+    margin-top: 12px;
+    line-height: 1.4;
+  }
+
+  /* ---------- pay buttons ---------- */
+  .pay { margin-top: 24px; display: flex; flex-direction: column; gap: 12px; }
+
+  .btn {
+    --bezel: rgba(203,176,121,0.5);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-decoration: none;
+    background: linear-gradient(165deg, #fffdf7 0%, #fbf4e4 100%);
+    border: 1px solid var(--bezel);
+    border-radius: 18px;
+    padding: 7px 8px 7px 7px;
+    color: var(--burgundy-deep);
+    box-shadow:
+      inset 0 1px 1px rgba(255,255,255,0.8),
+      0 10px 24px -18px rgba(94,60,30,0.55);
+    cursor: pointer;
+    transition: transform 600ms cubic-bezier(0.22,0.61,0.36,1),
+                box-shadow 600ms cubic-bezier(0.22,0.61,0.36,1),
+                border-color 600ms cubic-bezier(0.22,0.61,0.36,1);
+  }
+  .btn:hover {
+    transform: translateY(-3px);
+    border-color: var(--gold);
+    box-shadow:
+      inset 0 1px 1px rgba(255,255,255,0.9),
+      0 18px 34px -20px rgba(94,60,30,0.6);
+  }
+  .btn:active { transform: translateY(-1px) scale(0.985); }
+
+  .btn .icon {
+    width: 46px; height: 46px;
+    flex: 0 0 46px;
+    border-radius: 13px;
+    display: grid; place-items: center;
+    color: #fff;
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 21px;
+    box-shadow: inset 0 1px 1px rgba(255,255,255,0.35), 0 6px 14px -8px rgba(0,0,0,0.45);
+  }
+  .icon.venmo { background: linear-gradient(160deg, #3d95ff, #0a72e8); }
+  .icon.cash  { background: linear-gradient(160deg, #15d66a, #00b84a); }
+  .icon.zelle { background: linear-gradient(160deg, #8a3ef0, #6a14cf); }
+
+  .btn .txt { display: flex; flex-direction: column; line-height: 1.2; gap: 2px; }
+  .btn .txt .t1 {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+  .btn .txt .t2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    color: var(--ink-soft);
+    letter-spacing: 0.02em;
+  }
+
+  /* button-in-button trailing action */
+  .btn .go {
+    margin-left: auto;
+    margin-right: 6px;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: rgba(176,141,79,0.12);
+    border: 1px solid rgba(176,141,79,0.3);
+    display: grid; place-items: center;
+    color: var(--gold);
+    flex: 0 0 32px;
+    transition: transform 500ms cubic-bezier(0.22,0.61,0.36,1), background 500ms ease;
+  }
+  .btn:hover .go { transform: translate(2px,-1px) scale(1.08); background: rgba(176,141,79,0.2); }
+  .btn .go svg { width: 13px; height: 13px; stroke: currentColor; stroke-width: 1.6; fill: none; }
+
+  .copied {
+    margin-left: auto; margin-right: 6px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px; font-style: italic;
+    color: #1f9a52;
+    opacity: 0; transition: opacity 300ms ease;
+    white-space: nowrap;
+  }
+  .copied.show { opacity: 1; }
+  .btn .go.hide { display: none; }
+
+  /* ---------- footer ---------- */
+  .foot {
+    text-align: center;
+    margin-top: 24px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+  .foot .sign {
+    font-family: 'Pinyon Script', cursive;
+    font-size: 22px;
+    color: var(--burgundy);
+    display: block;
+    margin-top: 6px;
+  }
+  .foot .hr {
+    width: 40px; height: 1px;
+    background: var(--gold-line);
+    margin: 0 auto 14px;
+    opacity: 0.7;
+  }
+
+  /* preview banner */
+  .preview-tag {
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px dashed var(--gold-line);
+    border-radius: 999px;
+    padding: 7px 14px;
+    margin: 0 auto 22px;
+    width: max-content;
+    max-width: 100%;
+    background: rgba(255,255,255,0.35);
+  }
+
+  @media (max-width: 420px) {
+    .core { padding: 34px 22px 30px; }
+    .names { font-size: 42px; }
+    .ask .amount { font-size: 56px; }
+  }
+</style>
+</head>
+<body>
+  <main class="shell">
+    <div class="core" id="core">
+      <span class="corner tl"></span><span class="corner tr"></span>
+      <span class="corner bl"></span><span class="corner br"></span>
+
+      <div class="crest rise d1">
+        <span class="ring"><span class="mono">O<span class="amp">&amp;</span>P</span></span>
+      </div>
+
+      <div class="eyebrow rise d2">Please join us for an</div>
+
+      <h1 class="names rise d2">
+        OSCAR
+        <span class="amp">and</span>
+        PRAISE
+      </h1>
+
+      <div class="occasion rise d3">Engagement Dinner</div>
+
+      <div class="botanical rise d3" aria-hidden="true">
+        <svg viewBox="0 0 168 24" fill="none" stroke="#b08d4f" stroke-width="1" stroke-linecap="round">
+          <path d="M84 4 v16"/>
+          <path d="M84 12 c-1.8 -1.6 -1.8 -4.4 0 -6 1.8 1.6 1.8 4.4 0 6z" fill="#c98b95" stroke="#b08d4f"/>
+          <g>
+            <path d="M74 12 H30"/>
+            <path d="M58 12 c-3 -3 -7 -3 -10 0 3 3 7 3 10 0z"/>
+            <path d="M46 12 c-2.4 -2.4 -5.6 -2.4 -8 0 2.4 2.4 5.6 2.4 8 0z"/>
+            <path d="M36 12 c-1.8 -1.8 -4.2 -1.8 -6 0 1.8 1.8 4.2 1.8 6 0z"/>
+            <circle cx="30" cy="12" r="1.4" fill="#b08d4f" stroke="none"/>
+          </g>
+          <g transform="translate(168,0) scale(-1,1)">
+            <path d="M74 12 H30"/>
+            <path d="M58 12 c-3 -3 -7 -3 -10 0 3 3 7 3 10 0z"/>
+            <path d="M46 12 c-2.4 -2.4 -5.6 -2.4 -8 0 2.4 2.4 5.6 2.4 8 0z"/>
+            <path d="M36 12 c-1.8 -1.8 -4.2 -1.8 -6 0 1.8 1.8 4.2 1.8 6 0z"/>
+            <circle cx="30" cy="12" r="1.4" fill="#b08d4f" stroke="none"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="details rise d4">
+        Friday, June 26<sup>th</sup> 2026 &nbsp;·&nbsp; 6–10 PM<br />
+        <span class="venue">The Union Bar &amp; Provisions</span><br />
+        170 Union Ave, East Rutherford, NJ
+      </div>
+
+      <div class="ask rise d5">
+        <div class="eyebrow">Contribution per guest</div>
+        <div class="amount"><span class="cur">$</span>80</div>
+        <div class="per">per person</div>
+        <div class="note">To help us cover the restaurant minimum.<br />Thank you for celebrating with us.</div>
+      </div>
+
+      <div class="pay">
+        <a class="btn rise d5" id="venmoBtn" href="https://venmo.com/?txn=pay&recipients=iamoscart&amount=80&note=Engagement%20Dinner%20%F0%9F%A5%82" target="_blank" rel="noopener">
+          <span class="icon venmo">V</span>
+          <span class="txt"><span class="t1">Venmo</span><span class="t2">@iamoscart · opens with $80</span></span>
+          <span class="go"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+
+        <a class="btn rise d6" id="cashBtn" href="https://cash.app/$OscarTimothyOkolo/80" target="_blank" rel="noopener">
+          <span class="icon cash">$</span>
+          <span class="txt"><span class="t1">Cash App</span><span class="t2">$OscarTimothyOkolo · opens with $80</span></span>
+          <span class="go"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+
+        <div class="btn rise d7" id="zelleBtn" role="button" tabindex="0" aria-label="Copy Zelle handle">
+          <span class="icon zelle">Z</span>
+          <span class="txt"><span class="t1">Zelle</span><span class="t2" id="zelleSub">oscarokolot@gmail.com · tap to copy</span></span>
+          <span class="copied" id="copiedFlag">Copied ✓</span>
+          <span class="go" id="zelleGo"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg></span>
+        </div>
+      </div>
+
+      <div class="foot rise d7">
+        <div class="hr"></div>
+        Use whichever is easiest — for Zelle, copy the handle<br />and open your bank app to send.
+        <span class="sign">With love, Oscar &amp; Praise</span>
+      </div>
+
+    </div>
+  </main>
+
+<script>
+  // entrance choreography
+  window.addEventListener('load', function () {
+    requestAnimationFrame(function () { document.getElementById('core').classList.add('in'); });
+  });
+
+  // Zelle copy-to-clipboard
+  var zelleHandle = "oscarokolot@gmail.com";
+  var zelleBtn = document.getElementById('zelleBtn');
+  var flag = document.getElementById('copiedFlag');
+  var go = document.getElementById('zelleGo');
+  function copyZelle() {
+    function done() {
+      flag.classList.add('show'); go.classList.add('hide');
+      setTimeout(function () { flag.classList.remove('show'); go.classList.remove('hide'); }, 1700);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(zelleHandle).then(done).catch(function () { alert('Zelle: ' + zelleHandle); });
+    } else { alert('Zelle: ' + zelleHandle); }
+  }
+  zelleBtn.addEventListener('click', copyZelle);
+  zelleBtn.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); copyZelle(); }
+  });
+</script>
+</body>
+</html>
