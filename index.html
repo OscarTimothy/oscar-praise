@@ -436,6 +436,21 @@
   }
   .inperson svg { width: 20px; height: 20px; flex: 0 0 20px; margin-top: 2px; }
 
+  /* ---------- dress code ---------- */
+  .dress { margin-top: 22px; text-align: center; }
+  .dress .hint { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 14.5px; color: var(--ink-soft); margin-top: 3px; }
+  .swatches { display: flex; justify-content: center; gap: 20px; margin-top: 14px; }
+  .sw { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .sw .dot {
+    width: 48px; height: 48px; border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.55);
+    box-shadow: inset 0 2px 3px rgba(255,255,255,0.55), inset 0 -2px 4px rgba(94,60,30,0.12), 0 9px 18px -10px rgba(94,60,30,0.5);
+  }
+  .sw .dot.pink  { background: radial-gradient(circle at 32% 28%, #fce2e8 0%, #f3c4d0 65%, #e9aebd 100%); }
+  .sw .dot.blue  { background: radial-gradient(circle at 32% 28%, #c8d6e4 0%, #9fb5c9 65%, #8aa3bb 100%); }
+  .sw .dot.beige { background: radial-gradient(circle at 32% 28%, #f1e4ca 0%, #e3d0ab 65%, #d6bf91 100%); }
+  .sw .lbl { font-family: 'Cormorant Garamond', serif; font-size: 13.5px; letter-spacing: 0.06em; color: var(--ink); white-space: nowrap; }
+
   /* ---------- RSVP form ---------- */
   .rsvp { margin-top: 26px; }
   .rsvp-head { text-align: center; margin-bottom: 16px; }
@@ -569,6 +584,16 @@
         Friday, June 26<sup>th</sup> 2026 &nbsp;·&nbsp; 6–10 PM<br />
         <span class="venue">The Union Bar &amp; Provisions</span><br />
         170 Union Ave, East Rutherford, NJ
+      </div>
+
+      <div class="dress rise d4">
+        <div class="eyebrow">Dress code</div>
+        <div class="hint">We'd love for you to wear</div>
+        <div class="swatches">
+          <div class="sw"><span class="dot pink"></span><span class="lbl">Pastel Pink</span></div>
+          <div class="sw"><span class="dot blue"></span><span class="lbl">Dusty Blue</span></div>
+          <div class="sw"><span class="dot beige"></span><span class="lbl">Beige</span></div>
+        </div>
       </div>
 
       <div class="ask rise d5">
