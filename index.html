@@ -697,8 +697,11 @@
     if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); copyZelle(); }
   });
 
-  // ---------- RSVP ----------
-  var STORE = "https://api.restful-api.dev/objects/ff8081819d82fab6019eb47bfe5a6e11";
+  // ---------- RSVP (submits into a private Google Form → your Google Sheet) ----------
+  var FORM_ENDPOINT = "https://docs.google.com/forms/d/e/1FAIpQLSd8erji8nXwKnhzrb19koTK3Ac8UYYtWuJYXR8-Pp4yMqh8Jw/formResponse";
+  var FIELD_NAME = "entry.632940656";
+  var FIELD_GUESTS = "entry.961176448";
+  var FIELD_PAY = "entry.445324529";
   var choiceEl = document.getElementById('choice');
   var pills = choiceEl.querySelectorAll('.pill');
   var chosenPay = null;
@@ -728,29 +731,25 @@
 
     submitBtn.disabled = true;
     submitLabel.textContent = 'Sending…';
-    var record = { name: name, guests: guests, pay: chosenPay, ts: new Date().toISOString() };
 
-    fetch(STORE, { headers: { 'Accept': 'application/json' } })
-      .then(function (r) { return r.json(); })
-      .then(function (obj) {
-        var list = (obj && obj.data && Array.isArray(obj.data.list)) ? obj.data.list : [];
-        list.push(record);
-        return fetch(STORE, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: 'op-rsvp-store', data: { list: list } })
-        });
-      })
-      .then(function (r) {
-        if (!r.ok) throw new Error('save failed');
-        form.style.display = 'none';
-        var first = name.split(' ')[0];
-        document.getElementById('successName').textContent = 'Thank you, ' + first + '!';
-        document.getElementById('successMsg').textContent = (chosenPay === 'online')
-          ? 'Your RSVP is in. Send your $80 below whenever you’re ready. 🥂'
-          : 'Your RSVP is in. You can settle the $80 at the restaurant on the night. 🥂';
-        document.getElementById('rsvpSuccess').style.display = 'block';
-      })
+    var body = new URLSearchParams();
+    body.append(FIELD_NAME, name);
+    body.append(FIELD_GUESTS, String(guests));
+    body.append(FIELD_PAY, chosenPay === 'online' ? 'Online' : 'At the restaurant');
+
+    function showThanks() {
+      form.style.display = 'none';
+      var first = name.split(' ')[0];
+      document.getElementById('successName').textContent = 'Thank you, ' + first + '!';
+      document.getElementById('successMsg').textContent = (chosenPay === 'online')
+        ? 'Your RSVP is in. Send your $80 below whenever you’re ready. 🥂'
+        : 'Your RSVP is in. You can settle the $80 at the restaurant on the night. 🥂';
+      document.getElementById('rsvpSuccess').style.display = 'block';
+    }
+
+    // Google Forms accepts the post but returns an opaque (no-cors) response — success = no network error.
+    fetch(FORM_ENDPOINT, { method: 'POST', mode: 'no-cors', body: body })
+      .then(showThanks)
       .catch(function () {
         submitBtn.disabled = false;
         submitLabel.textContent = 'Send RSVP';
