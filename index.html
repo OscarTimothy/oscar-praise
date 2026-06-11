@@ -436,6 +436,80 @@
   }
   .inperson svg { width: 20px; height: 20px; flex: 0 0 20px; margin-top: 2px; }
 
+  /* ---------- RSVP form ---------- */
+  .rsvp { margin-top: 26px; }
+  .rsvp-head { text-align: center; margin-bottom: 16px; }
+  .rsvp-head .script { font-family: 'Pinyon Script', cursive; font-size: 32px; color: var(--burgundy); line-height: 1; }
+  .rsvp-head .sub { font-family: 'Cormorant Garamond', serif; font-size: 14px; color: var(--ink-soft); letter-spacing: 0.04em; margin-top: 2px; }
+
+  .field { margin-bottom: 13px; }
+  .field label {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12.5px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--ink-soft); margin: 0 0 6px 2px;
+  }
+  .field input {
+    width: 100%;
+    font-family: 'Cormorant Garamond', serif; font-size: 17px;
+    color: var(--burgundy-deep);
+    background: #fffdf7;
+    border: 1px solid rgba(203,176,121,0.5);
+    border-radius: 12px;
+    padding: 12px 14px;
+    box-shadow: inset 0 1px 1px rgba(255,255,255,0.7);
+    outline: none;
+    transition: border-color .3s ease, box-shadow .3s ease;
+  }
+  .field input:focus { border-color: var(--gold); box-shadow: inset 0 1px 1px rgba(255,255,255,0.7), 0 0 0 3px rgba(176,141,79,0.16); }
+  .field input::placeholder { color: #b6a47c; }
+
+  .choice { display: flex; gap: 10px; }
+  .choice .pill {
+    flex: 1; cursor: pointer; text-align: center;
+    background: #fffdf7;
+    border: 1px solid rgba(203,176,121,0.5);
+    border-radius: 12px;
+    padding: 11px 8px;
+    box-shadow: inset 0 1px 1px rgba(255,255,255,0.7);
+    transition: transform .4s cubic-bezier(0.22,0.61,0.36,1), border-color .3s ease, background .3s ease, box-shadow .3s ease;
+    user-select: none;
+  }
+  .choice .pill .pt { display: block; font-family: 'Fraunces', serif; font-size: 16px; color: var(--burgundy-deep); line-height: 1.2; }
+  .choice .pill .ps { font-family: 'Cormorant Garamond', serif; font-size: 13px; color: var(--ink-soft); }
+  .choice .pill.active {
+    border-color: var(--gold);
+    background: linear-gradient(165deg, #fff 0%, #f6e9d0 100%);
+    box-shadow: inset 0 1px 1px rgba(255,255,255,0.85), 0 9px 20px -14px rgba(94,60,30,0.55);
+    transform: translateY(-1px);
+  }
+  .choice .pill.active .pt { color: var(--burgundy); }
+
+  .submit {
+    width: 100%; margin-top: 16px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 11px;
+    font-family: 'Fraunces', serif; font-size: 17px; letter-spacing: 0.02em; color: #fff;
+    background: linear-gradient(165deg, #9a4150 0%, #7e3342 100%);
+    border: none; border-radius: 14px; padding: 14px 18px;
+    box-shadow: 0 13px 26px -14px rgba(126,51,66,0.85), inset 0 1px 0 rgba(255,255,255,0.22);
+    transition: transform .5s cubic-bezier(0.22,0.61,0.36,1), box-shadow .5s ease;
+  }
+  .submit:hover { transform: translateY(-2px); box-shadow: 0 18px 34px -16px rgba(126,51,66,0.9), inset 0 1px 0 rgba(255,255,255,0.28); }
+  .submit:active { transform: translateY(0) scale(0.99); }
+  .submit[disabled] { opacity: 0.65; cursor: default; transform: none; }
+  .submit .go2 { width: 26px; height: 26px; border-radius: 50%; background: rgba(255,255,255,0.18); display: grid; place-items: center; flex: 0 0 26px; }
+  .submit .go2 svg { width: 12px; height: 12px; stroke: #fff; stroke-width: 1.8; fill: none; }
+
+  .form-msg { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 14px; text-align: center; margin-top: 10px; min-height: 16px; color: #bb4a40; }
+
+  .rsvp-success { text-align: center; padding: 6px 4px 2px; }
+  .rsvp-success .check { width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--gold); display: grid; place-items: center; margin: 0 auto 12px; color: var(--gold); box-shadow: inset 0 0 0 4px rgba(248,241,226,0.9); }
+  .rsvp-success .check svg { width: 22px; height: 22px; stroke: currentColor; stroke-width: 1.7; fill: none; }
+  .rsvp-success h4 { font-family: 'Fraunces', serif; font-weight: 500; font-size: 23px; color: var(--burgundy); }
+  .rsvp-success p { font-family: 'Cormorant Garamond', serif; font-size: 16px; color: var(--ink); margin-top: 6px; line-height: 1.45; }
+
+  .pay-head { text-align: center; font-family: 'Cormorant Garamond', serif; font-size: 12.5px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin: 24px 0 13px; }
+
   @media (max-width: 420px) {
     .core { padding: 34px 22px 30px; }
     .names { font-size: 42px; }
@@ -504,14 +578,46 @@
         <div class="note">The Union Bar &amp; Provisions has an $80 minimum per guest.<br />Thank you for celebrating with us.</div>
       </div>
 
-      <div class="pay">
-        <a class="btn rise d5" id="venmoBtn" href="https://venmo.com/?txn=pay&recipients=iamoscart&amount=80&note=Engagement%20Dinner%20%F0%9F%A5%82" target="_blank" rel="noopener">
-          <span class="icon venmo">V</span>
-          <span class="txt"><span class="t1">Venmo</span><span class="t2">@iamoscart · opens with $80</span></span>
-          <span class="go"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-        </a>
+      <div class="rsvp rise d6" id="rsvpSection">
+        <div class="rsvp-head">
+          <div class="script">Kindly RSVP</div>
+          <div class="sub">Let us know you're coming</div>
+        </div>
 
-        <a class="btn rise d6" id="cashBtn" href="https://cash.app/$OscarTimothyOkolo/80" target="_blank" rel="noopener">
+        <form id="rsvpForm" novalidate>
+          <div class="field">
+            <label for="guestName">Your name</label>
+            <input id="guestName" name="name" type="text" placeholder="First &amp; last name" autocomplete="name" />
+          </div>
+          <div class="field">
+            <label for="guestCount">Number in your party</label>
+            <input id="guestCount" name="guests" type="number" min="1" max="20" value="1" inputmode="numeric" />
+          </div>
+          <div class="field">
+            <label>How will you pay the $80 per person?</label>
+            <div class="choice" id="choice">
+              <div class="pill" data-val="online" role="button" tabindex="0"><span class="pt">Online</span><span class="ps">Cash App / Zelle</span></div>
+              <div class="pill" data-val="restaurant" role="button" tabindex="0"><span class="pt">At the restaurant</span><span class="ps">On the night</span></div>
+            </div>
+          </div>
+          <button type="submit" class="submit" id="submitBtn">
+            <span id="submitLabel">Send RSVP</span>
+            <span class="go2"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </button>
+          <div class="form-msg" id="formMsg"></div>
+        </form>
+
+        <div class="rsvp-success" id="rsvpSuccess" style="display:none;">
+          <div class="check"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 8"/></svg></div>
+          <h4 id="successName">Thank you!</h4>
+          <p id="successMsg">Your RSVP is in.</p>
+        </div>
+      </div>
+
+      <div class="pay-head rise d6">Paying online? Send your $80 via</div>
+
+      <div class="pay">
+        <a class="btn rise d5" id="cashBtn" href="https://cash.app/$OscarTimothyOkolo/80" target="_blank" rel="noopener">
           <span class="icon cash">$</span>
           <span class="txt"><span class="t1">Cash App</span><span class="t2">$OscarTimothyOkolo · opens with $80</span></span>
           <span class="go"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
@@ -564,6 +670,67 @@
   zelleBtn.addEventListener('click', copyZelle);
   zelleBtn.addEventListener('keydown', function (e) {
     if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); copyZelle(); }
+  });
+
+  // ---------- RSVP ----------
+  var STORE = "https://api.restful-api.dev/objects/ff8081819d82fab6019eb47bfe5a6e11";
+  var choiceEl = document.getElementById('choice');
+  var pills = choiceEl.querySelectorAll('.pill');
+  var chosenPay = null;
+  pills.forEach(function (p) {
+    function sel() {
+      pills.forEach(function (x) { x.classList.remove('active'); });
+      p.classList.add('active');
+      chosenPay = p.getAttribute('data-val');
+    }
+    p.addEventListener('click', sel);
+    p.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); sel(); } });
+  });
+
+  var form = document.getElementById('rsvpForm');
+  var formMsg = document.getElementById('formMsg');
+  var submitBtn = document.getElementById('submitBtn');
+  var submitLabel = document.getElementById('submitLabel');
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    formMsg.textContent = '';
+    var name = document.getElementById('guestName').value.trim();
+    var guests = parseInt(document.getElementById('guestCount').value, 10);
+    if (!guests || guests < 1) guests = 1;
+    if (!name) { formMsg.textContent = 'Please enter your name.'; return; }
+    if (!chosenPay) { formMsg.textContent = 'Please choose how you’ll pay.'; return; }
+
+    submitBtn.disabled = true;
+    submitLabel.textContent = 'Sending…';
+    var record = { name: name, guests: guests, pay: chosenPay, ts: new Date().toISOString() };
+
+    fetch(STORE, { headers: { 'Accept': 'application/json' } })
+      .then(function (r) { return r.json(); })
+      .then(function (obj) {
+        var list = (obj && obj.data && Array.isArray(obj.data.list)) ? obj.data.list : [];
+        list.push(record);
+        return fetch(STORE, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: 'op-rsvp-store', data: { list: list } })
+        });
+      })
+      .then(function (r) {
+        if (!r.ok) throw new Error('save failed');
+        form.style.display = 'none';
+        var first = name.split(' ')[0];
+        document.getElementById('successName').textContent = 'Thank you, ' + first + '!';
+        document.getElementById('successMsg').textContent = (chosenPay === 'online')
+          ? 'Your RSVP is in. Send your $80 below whenever you’re ready. 🥂'
+          : 'Your RSVP is in. You can settle the $80 at the restaurant on the night. 🥂';
+        document.getElementById('rsvpSuccess').style.display = 'block';
+      })
+      .catch(function () {
+        submitBtn.disabled = false;
+        submitLabel.textContent = 'Send RSVP';
+        formMsg.textContent = 'Hmm, that didn’t save — please check your connection and try again.';
+      });
   });
 </script>
 </body>
