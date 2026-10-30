@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Oscar &amp; Praise · Wedding Expenses</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Figtree:wght@400;500;600&display=swap">
+<style>
+/* Layout: summary first (sentence, tiles), then breakdowns in a two-up grid, then the ledger. The form opens as a sheet over the page. */
+:root{
+  --paper:#f8f1e2; --panel:#fdf8ee; --line:#e6d8bb; --ink:#3d2c22; --muted:#7b6450;
+  --burgundy:#823542; --burgundy-ink:#fdf8ee; --gold:#b08d4f; --rose:#d9aab2; --soft:#f1e6cf;
+  --ok:#2f7a4a; --warn:#a0620e; --bad:#a8323c;
+  --f-display:"Fraunces",Georgia,"Times New Roman",serif;
+  --f-body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r:12px; color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root{
+  --paper:#1a1214; --panel:#24191c; --line:#3c2b2f; --ink:#f3e8dc; --muted:#bba48f;
+  --burgundy:#d77f8d; --burgundy-ink:#1a1214; --gold:#d8bd84; --rose:#7a3f49; --soft:#2d2023;
+  --ok:#6fcf91; --warn:#e3a54a; --bad:#f08079; color-scheme:dark}}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.wrap{max-width:72rem;margin:0 auto;padding-block:24px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:20px}
+h1,h2{font-family:var(--f-display);font-weight:500;margin:0;text-wrap:balance}
+h1{font-size:clamp(1.6rem,4vw,2.2rem);color:var(--burgundy)}
+h2{font-size:1.2rem}
+.eyebrow{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:600}
+.muted{color:var(--muted)}
+button{font:inherit;cursor:pointer;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:8px 16px;font-weight:500}
+button.primary{background:var(--burgundy);border-color:var(--burgundy);color:var(--burgundy-ink)}
+button:disabled{opacity:.55;cursor:default}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+input,select,textarea{font:inherit;font-size:.95rem;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:9px 11px;width:100%;min-width:0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px;min-width:0}
+.note{font-size:.82rem;color:var(--muted);margin:2px 0 14px}
+
+/* login */
+.gate{min-height:100vh;min-height:100dvh;display:grid;place-items:center;padding:24px max(16px,env(safe-area-inset-left,0px))}
+.gate .card{width:min(100%,24rem);text-align:center;padding:32px 24px;display:flex;flex-direction:column;gap:14px}
+.gate .mono{font-family:var(--f-display);font-size:2.4rem;color:var(--gold);line-height:1}
+.gate form{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+.gate .err{color:var(--bad);font-size:.88rem;min-height:1.3em;margin:0}
+
+/* app */
+.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px}
+.top .actions{display:flex;flex-wrap:wrap;gap:8px}
+.take{font-size:1.05rem;max-width:60rem;margin:6px 0 0}
+.take b{font-variant-numeric:tabular-nums}
+.banner{border:1px solid var(--line);border-left:4px solid var(--warn);background:var(--panel);border-radius:10px;padding:12px 14px;font-size:.9rem}
+.banner.bad{border-left-color:var(--bad)} .banner.ok{border-left-color:var(--ok)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,12.5rem),1fr));gap:12px}
+.kpi .l{font-size:.78rem;color:var(--muted)}
+.kpi .v{font-family:var(--f-display);font-size:1.65rem;font-variant-numeric:tabular-nums;margin-top:4px;line-height:1.15;overflow-wrap:anywhere}
+.kpi .n{font-size:.78rem;color:var(--muted);margin-top:4px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,22rem),1fr));gap:12px}
+.legend{display:flex;gap:14px;font-size:.78rem;color:var(--muted);margin-bottom:10px}
+.legend i{display:inline-block;width:.7rem;height:.7rem;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.sw-paid{background:var(--burgundy)} .sw-owed{background:var(--gold)}
+.bars{display:flex;flex-direction:column;gap:12px}
+.bar .lab{display:flex;justify-content:space-between;gap:10px;font-size:.85rem;margin-bottom:4px}
+.bar .lab span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar .lab span:last-child{font-variant-numeric:tabular-nums;color:var(--muted);white-space:nowrap}
+.track{display:flex;height:12px;border-radius:6px;background:var(--soft);overflow:hidden}
+.track .p{background:var(--burgundy)} .track .o{background:var(--gold)}
+.months{display:flex;align-items:flex-end;gap:8px;height:190px;padding-top:22px;border-bottom:1px solid var(--line)}
+.mcol{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;position:relative}
+.mcol .b{width:min(100%,34px);background:var(--burgundy);border-radius:5px 5px 0 0;min-height:1px}
+.mcol .t{position:absolute;font-size:.7rem;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.mlabels{display:flex;gap:8px;margin-top:6px}
+.mlabels span{flex:1 1 0;min-width:0;text-align:center;font-size:.72rem;color:var(--muted);white-space:nowrap;overflow:hidden}
+.meter .big{font-family:var(--f-display);font-size:2rem;font-variant-numeric:tabular-nums}
+.meter .track{height:14px;margin-top:12px}
+.meter .scale{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:.8rem;color:var(--muted);margin-top:6px;font-variant-numeric:tabular-nums}
+.tools{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.tools input{flex:1 1 14rem;width:auto}
+.tools select{flex:0 1 13rem;width:auto}
+.tablebox{overflow:auto;max-height:32rem;margin:0 -18px;border-top:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;font-size:.85rem;font-variant-numeric:tabular-nums}
+th{position:sticky;top:0;background:var(--panel);text-align:left;font-weight:600;color:var(--muted);font-size:.76rem;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{padding-left:18px} th:last-child,td:last-child{padding-right:18px}
+td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+tbody tr.click{cursor:pointer} tbody tr.click:hover{background:var(--soft)}
+.n{text-align:right;white-space:nowrap}
+.pill{display:inline-block;font-size:.72rem;padding:2px 8px;border-radius:999px;background:var(--soft);white-space:nowrap}
+.pill.full{color:var(--ok)} .pill.due{color:var(--warn)}
+.empty{color:var(--muted);text-align:center;padding:22px 10px}
+@media (max-width:640px){.hide-n{display:none}}
+
+/* form sheet */
+.sheet{position:fixed;inset:0;z-index:20;display:flex;justify-content:flex-end;background:rgba(30,15,18,.42)}
+.sheet .panel{width:min(100%,32rem);height:100%;overflow:auto;background:var(--panel);border-left:1px solid var(--line);padding:22px max(18px,env(safe-area-inset-right,0px)) calc(28px + env(safe-area-inset-bottom,0px)) 18px;padding-top:calc(22px + env(safe-area-inset-top,0px))}
+.sheet form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}
+.sheet .full{grid-column:1/-1}
+.sheet label{display:flex;flex-direction:column;gap:4px;font-size:.8rem;color:var(--muted);font-weight:500;min-width:0}
+.amount{position:relative}
+.amount span{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+.amount input{padding-left:26px;font-variant-numeric:tabular-nums}
+.calc{grid-column:1/-1;display:flex;justify-content:space-between;align-items:baseline;padding:10px 12px;border-radius:10px;background:var(--soft);font-size:.9rem}
+.calc b{font-variant-numeric:tabular-nums;font-size:1.05rem}
+.ferr{grid-column:1/-1;color:var(--bad);font-size:.88rem;margin:0}
+.fbar{grid-column:1/-1;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.head-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+@media (max-width:420px){.sheet form{grid-template-columns:minmax(0,1fr)}}
+.skel{color:transparent!important;background:var(--soft);border-radius:6px}
+@media (prefers-reduced-motion:no-preference){.track div,.mcol .b{transition:width .4s ease,height .4s ease}}
+</style>
+</head>
+<body>
+
+<div class="gate" id="gate">
+  <div class="card">
+    <div class="mono">O &amp; P</div>
+    <div class="eyebrow">Wedding expenses</div>
+    <h1>Welcome back</h1>
+    <p class="muted" style="margin:0">Enter the password to see the budget and log payments.</p>
+    <form id="login">
+      <label for="pw" class="muted" style="font-size:.8rem;text-align:left">Password</label>
+      <input id="pw" type="password" autocomplete="current-password" required>
+      <button class="primary" type="submit" id="login-btn">Open</button>
+      <p class="err" id="login-err" role="alert"></p>
+    </form>
+  </div>
+</div>
+
+<div class="wrap" id="app" hidden>
+  <header class="top">
+    <div>
+      <div class="eyebrow">Praise &amp; Oscar</div>
+      <h1>Wedding expenses</h1>
+      <p class="take" id="take"><span class="skel">Loading the budget from the sheet</span></p>
+    </div>
+    <div class="actions">
+      <button type="button" id="reload">Reload</button>
+      <button type="button" id="lock">Lock</button>
+      <button type="button" class="primary" id="add">Add expense</button>
+    </div>
+  </header>
+
+  <div class="banner" id="banner" hidden></div>
+
+  <section class="kpis" aria-label="Headline figures">
+    <div class="card kpi"><div class="l">Paid so far</div><div class="v" id="k-paid">—</div><div class="n" id="k-rate">Dollars converted at the sheet's rate</div></div>
+    <div class="card kpi"><div class="l">Still owed</div><div class="v" id="k-owed">—</div><div class="n" id="k-vendors">&nbsp;</div></div>
+    <div class="card kpi"><div class="l">Known total cost</div><div class="v" id="k-total">—</div><div class="n">Paid plus owed, for items logged so far</div></div>
+    <div class="card kpi"><div class="l">Left after paying balances</div><div class="v" id="k-left">—</div><div class="n" id="k-account">&nbsp;</div></div>
+    <div class="card kpi"><div class="l">Days to go</div><div class="v" id="k-days">—</div><div class="n" id="k-date">&nbsp;</div></div>
+  </section>
+
+  <section class="grid">
+    <div class="card">
+      <h2>Where the money goes</h2>
+      <p class="note">Paid and still owed by category, in naira</p>
+      <div class="legend"><span><i class="sw-paid"></i>Paid</span><span><i class="sw-owed"></i>Still owed</span></div>
+      <div class="bars" id="by-category"></div>
+    </div>
+    <div class="card meter">
+      <h2>Account vs what is owed</h2>
+      <p class="note">Open balances as a share of the account balance on the Summary tab</p>
+      <div id="meter"></div>
+    </div>
+  </section>
+
+  <section class="grid">
+    <div class="card">
+      <h2>By event</h2>
+      <p class="note">Paid and still owed for each part of the celebration, in naira</p>
+      <div class="legend"><span><i class="sw-paid"></i>Paid</span><span><i class="sw-owed"></i>Still owed</span></div>
+      <div class="bars" id="by-event"></div>
+    </div>
+    <div class="card">
+      <h2>Spending by month</h2>
+      <p class="note">Amount paid each month, dollars converted to naira</p>
+      <div class="months" id="months"></div>
+      <div class="mlabels" id="mlabels"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Balances still owed</h2>
+    <p class="note">Every item with money left to pay, largest first. Tap a row to update it.</p>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>Vendor</th><th>Item</th><th class="hide-n">Event</th><th class="n">Owed</th><th class="n">In naira</th></tr></thead>
+        <tbody id="owed"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>All payments</h2>
+    <p class="note">Every row on the Expenses tab, newest first. Tap a row to edit it.</p>
+    <div class="tools">
+      <input id="q" type="search" placeholder="Search vendor, item or notes" aria-label="Search payments">
+      <select id="cat" aria-label="Category"></select>
+    </div>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>Date</th><th>Vendor</th><th>Item</th><th class="hide-n">Category</th><th class="hide-n">Event</th><th class="n">Total</th><th class="n">Paid</th><th class="n">Owed</th><th class="hide-n">Status</th></tr></thead>
+        <tbody id="payments"></tbody>
+      </table>
+    </div>
+  </section>
+  <p class="muted" style="font-size:.78rem;margin:0" id="stamp"></p>
+</div>
+
+<div class="sheet" id="sheet" hidden>
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="f-title">
+    <div class="head-row">
+      <h2 id="f-title">New expense</h2>
+      <span class="eyebrow" id="f-row"></span>
+    </div>
+    <form id="f" novalidate>
+      <label>Date paid<input id="f-date" type="date" required></label>
+      <label>Vendor<input id="f-vendor" list="vendors" autocomplete="off" required></label>
+      <label class="full">Item / description<input id="f-item" required></label>
+      <label>Category<select id="f-category"></select></label>
+      <label>Event<select id="f-event"></select></label>
+      <label>Paid by<select id="f-paidBy"></select></label>
+      <label>Currency<select id="f-currency"></select></label>
+      <label>Total cost<span class="amount"><span class="sym">₦</span><input id="f-total" inputmode="decimal" placeholder="0"></span></label>
+      <label>Amount paid<span class="amount"><span class="sym">₦</span><input id="f-paid" inputmode="decimal" placeholder="0"></span></label>
+      <div class="calc"><span>Balance due</span><b id="f-balance">—</b></div>
+      <label class="full">Status<select id="f-status"></select></label>
+      <label class="full">Notes<textarea id="f-notes" rows="3"></textarea></label>
+      <p class="ferr" id="f-err" role="alert" hidden></p>
+      <div class="fbar">
+        <button type="button" id="f-cancel">Cancel</button>
+        <button type="submit" class="primary" id="f-save">Add to sheet</button>
+      </div>
+    </form>
+    <datalist id="vendors"></datalist>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script>
+(() => {
+  const API = (window.EXPENSES_CONFIG && window.EXPENSES_CONFIG.apiUrl || '').trim();
+  const DEFAULT_LISTS = {
+    category: ['Photography','Attire','Planner','Venue','Catering','Decor','Hair & Makeup','Materials','Transport','Entertainment','Rings & Jewelry','Stationery','Gifts','Other'],
+    event: ['Introduction / Pre-wedding','Civil Wedding','Traditional Wedding','White Wedding','Reception','Wedding (general)'],
+    paidBy: ['Praise','Oscar','Joint'],
+    currency: ['NGN','USD'],
+    status: ['Not paid','Deposit paid','Partially paid','Paid in full'],
+  };
+  const $ = (id) => document.getElementById(id);
+  const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+
+  let password = '';
+  let data = null, lists = DEFAULT_LISTS, editing = null, statusTouched = false, saving = false;
+  const store = {
+    get() { try { return sessionStorage.getItem('wx-pw') || ''; } catch (e) { return ''; } },
+    set(v) { try { v ? sessionStorage.setItem('wx-pw', v) : sessionStorage.removeItem('wx-pw'); } catch (e) {} },
+  };
+
+  /* ---------- formatting ---------- */
+  const ngn = (v) => (v < 0 ? '−₦' : '₦') + Math.round(Math.abs(v)).toLocaleString('en');
+  const usd = (v) => '$' + v.toLocaleString('en', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+  const money = (cur, v) => (v == null ? '—' : cur === 'USD' ? usd(v) : ngn(v));
+  const compact = (v) => '₦' + new Intl.NumberFormat('en', {notation: 'compact', maximumFractionDigits: 1}).format(v);
+  const parseISO = (s) => { const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(s || ''); return m ? new Date(+m[1], +m[2] - 1, +m[3]) : null; };
+  const fmtDate = (s) => { const d = parseISO(s); return d ? d.toLocaleDateString('en', {month: 'short', day: 'numeric', year: 'numeric'}) : (s || ''); };
+  const todayISO = () => { const n = new Date(); return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2,'0')}-${String(n.getDate()).padStart(2,'0')}`; };
+  const num = (s) => { const t = String(s ?? '').replace(/[₦$,\s]/g, ''); if (t === '') return null; const x = Number(t); return Number.isFinite(x) ? x : NaN; };
+
+  /* ---------- API ---------- */
+  async function call(action, extra) {
+    if (!API) throw {error: 'no_api', message: 'The site is not connected to the sheet yet. Add the Apps Script URL to expenses/config.js (see the README).'};
+    let res;
+    try {
+      res = await fetch(API, {method: 'POST', body: JSON.stringify(Object.assign({action, password}, extra || {}))});
+    } catch (e) {
+      throw {error: 'network', message: 'Could not reach the sheet. Check your connection and try again.'};
+    }
+    let out;
+    try { out = await res.json(); } catch (e) { throw {error: 'network', message: 'The sheet sent back something unexpected. Check that the Apps Script is deployed with access for Anyone.'}; }
+    if (!out.ok) throw out;
+    return out;
+  }
+
+  /* ---------- login ---------- */
+  function showGate(msg) {
+    $('app').hidden = true; $('sheet').hidden = true; $('gate').hidden = false;
+    $('login-err').textContent = msg || ''; $('pw').value = ''; $('pw').focus();
+  }
+  $('login').addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    const pw = $('pw').value;
+    if (!pw) { $('login-err').textContent = 'Enter the password.'; return; }
+    $('login-btn').disabled = true; $('login-err').textContent = '';
+    password = pw;
+    try { await call('login'); store.set(pw); openApp(); }
+    catch (e) { password = ''; $('login-err').textContent = e.message || 'Could not sign in.'; }
+    finally { $('login-btn').disabled = false; }
+  });
+  $('lock').addEventListener('click', () => { password = ''; store.set(''); data = null; showGate(''); });
+
+  function openApp() { $('gate').hidden = true; $('app').hidden = false; load(); }
+
+  function banner(text, kind) { const b = $('banner'); b.hidden = !text; b.className = 'banner' + (kind ? ' ' + kind : ''); b.textContent = text || ''; }
+  function handle(e) {
+    if (e && (e.error === 'wrong_password' || e.error === 'locked')) { password = ''; store.set(''); showGate(e.message); return; }
+    banner((e && e.message) || 'Something went wrong talking to the sheet.', 'bad');
+  }
+
+  async function load() {
+    $('reload').disabled = true;
+    try {
+      const out = await call('read');
+      data = out.data;
+      lists = {};
+      Object.keys(DEFAULT_LISTS).forEach((k) => { lists[k] = (data.lists && data.lists[k] && data.lists[k].length) ? data.lists[k] : DEFAULT_LISTS[k]; });
+      banner('');
+      render();
+    } catch (e) { handle(e); }
+    finally { $('reload').disabled = false; }
+  }
+  $('reload').addEventListener('click', load);
+
+  /* ---------- derived numbers ---------- */
+  function derive() {
+    const rate = data.rate || 0;
+    const lines = data.rows.map((r) => {
+      const fx = r.currency === 'USD' ? rate : 1;
+      const paid = r.paid || 0;
+      const owed = r.balance || 0;
+      const total = r.total == null ? paid + owed : r.total;
+      return Object.assign({}, r, {paid0: paid, owed0: owed, total0: total, paidN: paid * fx, owedN: owed * fx, totalN: total * fx});
+    });
+    const sum = (k) => lines.reduce((a, r) => a + r[k], 0);
+    const group = (key) => {
+      const m = new Map();
+      lines.forEach((r) => { const k = r[key] || 'Other'; const g = m.get(k) || {name: k, paid: 0, owed: 0}; g.paid += r.paidN; g.owed += r.owedN; m.set(k, g); });
+      return [...m.values()].filter((g) => g.paid + g.owed > 0).sort((a, b) => (b.paid + b.owed) - (a.paid + a.owed));
+    };
+    const byMonth = new Map();
+    lines.forEach((r) => { if (r.date && /^\d{4}-\d{2}/.test(r.date)) { const k = r.date.slice(0, 7); byMonth.set(k, (byMonth.get(k) || 0) + r.paidN); } });
+    const keys = [...byMonth.keys()].sort();
+    const months = [];
+    if (keys.length) {
+      let [y, m] = keys[0].split('-').map(Number); const [ly, lm] = keys[keys.length - 1].split('-').map(Number);
+      while (y < ly || (y === ly && m <= lm)) { const k = `${y}-${String(m).padStart(2,'0')}`; months.push({k, v: byMonth.get(k) || 0}); m++; if (m > 12) { m = 1; y++; } }
+    }
+    const owed = sum('owedN');
+    return {
+      lines, months, byCategory: group('category'), byEvent: group('event'),
+      paid: sum('paidN'), owed, total: sum('totalN'),
+      account: data.account, left: data.account == null ? null : data.account - owed,
+      vendorsOwed: new Set(lines.filter((r) => r.owedN > 0).map((r) => r.vendor)).size,
+    };
+  }
+
+  /* ---------- rendering ---------- */
+  function render() {
+    const d = derive();
+    const take = $('take'); take.replaceChildren();
+    const b = (t) => el('b', null, t);
+    take.append('So far ', b(ngn(d.paid)), ' has gone out, with ', b(ngn(d.owed)), ` still owed to ${d.vendorsOwed} vendor${d.vendorsOwed === 1 ? '' : 's'}. `);
+    if (d.left != null) take.append(d.left >= 0 ? 'The account covers every open balance, leaving ' : 'The account is short of the open balances by ', b(ngn(Math.abs(d.left))), d.left >= 0 ? ' after they are paid.' : '.');
+
+    $('k-paid').textContent = ngn(d.paid);
+    $('k-rate').textContent = data.rate ? `Dollars converted at ₦${data.rate.toLocaleString('en')} per $1` : 'No exchange rate on the Summary tab';
+    $('k-owed').textContent = ngn(d.owed);
+    $('k-vendors').textContent = `Across ${d.vendorsOwed} vendor${d.vendorsOwed === 1 ? '' : 's'} with a balance`;
+    $('k-total').textContent = ngn(d.total);
+    $('k-left').textContent = d.left == null ? '—' : ngn(d.left);
+    $('k-left').style.color = d.left != null && d.left < 0 ? 'var(--bad)' : '';
+    $('k-account').textContent = d.account == null ? 'No account balance on the Summary tab' : `From an account balance of ${ngn(d.account)}`;
+    const wd = parseISO(data.weddingDate);
+    if (wd) {
+      const t = new Date(); t.setHours(0, 0, 0, 0);
+      const days = Math.round((wd - t) / 86400000);
+      $('k-days').textContent = days.toLocaleString('en');
+      $('k-date').textContent = 'Until ' + fmtDate(data.weddingDate);
+    } else { $('k-days').textContent = '—'; $('k-date').textContent = 'Add a wedding date on the Timeline tab'; }
+
+    bars($('by-category'), d.byCategory);
+    bars($('by-event'), d.byEvent);
+    months(d.months);
+    meter(d);
+    owedTable(d);
+    catPicker(d);
+    payments(d);
+    $('stamp').textContent = `Read from "${data.title}" at ${new Date(data.readAt).toLocaleTimeString('en', {hour: 'numeric', minute: '2-digit'})}.`;
+    const dl = $('vendors'); dl.replaceChildren(...[...new Set(data.rows.map((r) => r.vendor).filter(Boolean))].sort().map((v) => new Option(v)));
+  }
+
+  function bars(box, groups) {
+    box.replaceChildren();
+    if (!groups.length) { box.append(el('div', 'empty', 'Nothing logged yet.')); return; }
+    const max = Math.max(...groups.map((g) => g.paid + g.owed)) || 1;
+    groups.forEach((g) => {
+      const row = el('div', 'bar');
+      row.title = `${g.name}: paid ${ngn(g.paid)}, still owed ${ngn(g.owed)}`;
+      const lab = el('div', 'lab'); lab.append(el('span', null, g.name), el('span', null, ngn(g.paid + g.owed)));
+      const tr = el('div', 'track');
+      const p = el('div', 'p'); p.style.width = (g.paid / max * 100) + '%';
+      const o = el('div', 'o'); o.style.width = (g.owed / max * 100) + '%';
+      tr.append(p, o); row.append(lab, tr); box.append(row);
+    });
+  }
+
+  function months(list) {
+    const box = $('months'), labels = $('mlabels');
+    box.replaceChildren(); labels.replaceChildren();
+    if (!list.length) { box.append(el('div', 'empty', 'No dated payments yet.')); return; }
+    const max = Math.max(...list.map((m) => m.v)) || 1;
+    const showVals = list.length <= 8;
+    list.forEach((m) => {
+      const [y, mo] = m.k.split('-').map(Number);
+      const name = new Date(y, mo - 1, 1).toLocaleDateString('en', {month: 'short'}) + (list.length <= 6 ? ' ' + String(y).slice(2) : '');
+      const col = el('div', 'mcol'); col.title = `${new Date(y, mo - 1, 1).toLocaleDateString('en', {month: 'long', year: 'numeric'})}: ${ngn(m.v)}`;
+      const h = m.v / max * 100;
+      const bar = el('div', 'b'); bar.style.height = `calc(${h}% - ${h ? 18 : 0}px)`;
+      if (showVals && m.v) { const t = el('div', 't', compact(m.v)); t.style.bottom = `calc(${h}% - 14px)`; col.append(t); }
+      col.append(bar); box.append(col);
+      labels.append(el('span', null, name));
+    });
+  }
+
+  function meter(d) {
+    const box = $('meter'); box.replaceChildren();
+    if (d.account == null) { box.append(el('div', 'empty', 'Add an account balance on the Summary tab.')); return; }
+    const share = d.account ? d.owed / d.account : 0;
+    const big = el('div', 'big', Math.round(share * 100) + '%');
+    const cap = el('div', 'muted', share <= 1 ? 'of the account is needed to clear every open balance' : 'more is owed than the account holds');
+    cap.style.fontSize = '.85rem';
+    const tr = el('div', 'track'); const f = el('div', 'o'); f.style.width = Math.min(100, share * 100) + '%';
+    if (share > 1) f.style.background = 'var(--bad)';
+    tr.append(f);
+    const sc = el('div', 'scale'); sc.append(el('span', null, 'Owed ' + ngn(d.owed)), el('span', null, 'Account ' + ngn(d.account)));
+    box.append(big, cap, tr, sc);
+  }
+
+  function owedTable(d) {
+    const tb = $('owed'); tb.replaceChildren();
+    const rows = d.lines.filter((r) => r.owedN > 0).sort((a, b) => b.owedN - a.owedN);
+    if (!rows.length) { const tr = el('tr'); const td = el('td', 'empty', 'Nothing is owed right now.'); td.colSpan = 5; tr.append(td); tb.append(tr); return; }
+    rows.forEach((r) => {
+      const tr = el('tr', 'click'); tr.tabIndex = 0;
+      tr.append(el('td', null, r.vendor), el('td', null, r.item), el('td', 'hide-n', r.event), el('td', 'n', money(r.currency, r.owed0)), el('td', 'n', ngn(r.owedN)));
+      bindEdit(tr, r); tb.append(tr);
+    });
+  }
+
+  function catPicker(d) {
+    const sel = $('cat'); const keep = sel.value;
+    const cats = [...new Set(d.lines.map((r) => r.category).filter(Boolean))].sort();
+    sel.replaceChildren(new Option('All categories', ''), ...cats.map((c) => new Option(c, c)));
+    sel.value = cats.includes(keep) ? keep : '';
+  }
+
+  function payments(d) {
+    d = d || derive();
+    const q = $('q').value.trim().toLowerCase(), cat = $('cat').value;
+    const rows = d.lines
+      .filter((r) => !cat || r.category === cat)
+      .filter((r) => !q || [r.vendor, r.item, r.notes, r.category, r.event, r.status].join(' ').toLowerCase().includes(q))
+      .sort((a, b) => (b.date || '').localeCompare(a.date || '') || b.row - a.row);
+    const tb = $('payments'); tb.replaceChildren();
+    if (!rows.length) { const tr = el('tr'); const td = el('td', 'empty', d.lines.length ? 'No payments match.' : 'No payments yet. Use Add expense to log the first one.'); td.colSpan = 9; tr.append(td); tb.append(tr); return; }
+    rows.forEach((r) => {
+      const tr = el('tr', 'click'); tr.tabIndex = 0;
+      const st = el('td', 'hide-n'); st.append(el('span', 'pill ' + (/full/i.test(r.status) ? 'full' : r.owed0 ? 'due' : ''), r.status || '—'));
+      tr.append(el('td', null, fmtDate(r.date)), el('td', null, r.vendor), el('td', null, r.item), el('td', 'hide-n', r.category), el('td', 'hide-n', r.event),
+        el('td', 'n', money(r.currency, r.total0)), el('td', 'n', money(r.currency, r.paid0)), el('td', 'n', r.owed0 ? money(r.currency, r.owed0) : '—'), st);
+      bindEdit(tr, r); tb.append(tr);
+    });
+  }
+  $('q').addEventListener('input', () => data && payments());
+  $('cat').addEventListener('change', () => data && payments());
+
+  function bindEdit(tr, r) {
+    const go = () => openForm(data.rows.find((x) => x.row === r.row));
+    tr.addEventListener('click', go);
+    tr.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+  }
+
+  /* ---------- form ---------- */
+  const fill = (id, items, blank) => $(id).replaceChildren(...(blank ? [new Option('(not set)', '')] : []), ...items.map((v) => new Option(v, v)));
+  function syncSymbols() { const s = $('f-currency').value === 'USD' ? '$' : '₦'; document.querySelectorAll('.sym').forEach((e) => { e.textContent = s; }); }
+  function syncBalance() {
+    const total = num($('f-total').value), paid = num($('f-paid').value) || 0, cur = $('f-currency').value;
+    $('f-balance').textContent = total == null || Number.isNaN(total) ? 'Enter a total cost' : money(cur, total - (Number.isNaN(paid) ? 0 : paid));
+    if (!statusTouched) {
+      const want = !paid ? 'Not paid' : total != null && paid >= total ? 'Paid in full' : editing ? 'Partially paid' : 'Deposit paid';
+      if (lists.status.includes(want)) $('f-status').value = want;
+    }
+  }
+  function openForm(r) {
+    editing = r || null;
+    fill('f-category', lists.category); fill('f-event', lists.event); fill('f-paidBy', lists.paidBy, true);
+    fill('f-currency', lists.currency); fill('f-status', lists.status);
+    $('f-title').textContent = r ? 'Edit expense' : 'New expense';
+    $('f-row').textContent = r ? 'Sheet row ' + r.row : '';
+    $('f-save').textContent = r ? 'Save changes' : 'Add to sheet';
+    $('f-date').value = r && /^\d{4}-\d{2}-\d{2}$/.test(r.date) ? r.date : todayISO();
+    $('f-vendor').value = r ? r.vendor : ''; $('f-item').value = r ? r.item : '';
+    $('f-category').value = r && lists.category.includes(r.category) ? r.category : (lists.category.includes('Other') ? 'Other' : lists.category[0]);
+    $('f-event').value = r && lists.event.includes(r.event) ? r.event : (lists.event.includes('Wedding (general)') ? 'Wedding (general)' : lists.event[0]);
+    $('f-paidBy').value = r && lists.paidBy.includes(r.paidBy) ? r.paidBy : '';
+    $('f-currency').value = r && r.currency === 'USD' ? 'USD' : 'NGN';
+    $('f-total').value = r && r.total != null ? r.total.toLocaleString('en') : '';
+    $('f-paid').value = r && r.paid != null ? r.paid.toLocaleString('en') : '';
+    $('f-status').value = r && lists.status.includes(r.status) ? r.status : lists.status[0];
+    $('f-notes').value = r ? r.notes : '';
+    statusTouched = !!r; $('f-err').hidden = true;
+    syncSymbols(); syncBalance();
+    $('sheet').hidden = false; document.body.style.overflow = 'hidden';
+    setTimeout(() => $(r ? 'f-total' : 'f-vendor').focus(), 30);
+  }
+  function closeForm() { $('sheet').hidden = true; document.body.style.overflow = ''; editing = null; }
+  $('add').addEventListener('click', () => openForm(null));
+  $('f-cancel').addEventListener('click', closeForm);
+  $('sheet').addEventListener('click', (e) => { if (e.target === $('sheet') && !saving) closeForm(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('sheet').hidden && !saving) closeForm(); });
+  $('f-currency').addEventListener('change', () => { syncSymbols(); syncBalance(); });
+  $('f-total').addEventListener('input', syncBalance);
+  $('f-paid').addEventListener('input', syncBalance);
+  $('f-status').addEventListener('change', () => { statusTouched = true; });
+
+  $('f').addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    if (saving) return;
+    const err = $('f-err');
+    const total = num($('f-total').value), paid = num($('f-paid').value);
+    const problems = [];
+    if (!$('f-date').value) problems.push('a date');
+    if (!$('f-vendor').value.trim()) problems.push('a vendor');
+    if (!$('f-item').value.trim()) problems.push('an item');
+    if (Number.isNaN(total)) problems.push('a total cost written as a number');
+    if (Number.isNaN(paid)) problems.push('an amount paid written as a number');
+    if (problems.length) { err.textContent = 'Add ' + problems.join(', ') + '.'; err.hidden = false; return; }
+    if (total != null && paid != null && paid > total) { err.textContent = 'Amount paid is more than the total cost. Check both numbers.'; err.hidden = false; return; }
+    err.hidden = true; saving = true; $('f-save').disabled = true; $('f-save').textContent = 'Saving…';
+    const expense = {
+      date: $('f-date').value, vendor: $('f-vendor').value.trim(), item: $('f-item').value.trim(),
+      category: $('f-category').value, event: $('f-event').value, paidBy: $('f-paidBy').value,
+      currency: $('f-currency').value, total, paid, status: $('f-status').value, notes: $('f-notes').value.trim(),
+    };
+    const wasEditing = !!editing;
+    try {
+      const out = wasEditing
+        ? await call('update', {row: editing.row, expect: {vendor: editing.vendor, item: editing.item}, expense})
+        : await call('add', {expense});
+      closeForm();
+      await load();
+      banner(`${wasEditing ? 'Saved changes to' : 'Added'} ${expense.vendor} on sheet row ${out.row}.`, 'ok');
+    } catch (e) {
+      if (e && (e.error === 'wrong_password' || e.error === 'locked')) { closeForm(); handle(e); }
+      else if (e && e.error === 'network') { err.textContent = 'The sheet did not confirm the save, so it may or may not have gone through. Close this, press Reload and check the list before trying again.'; err.hidden = false; }
+      else { err.textContent = (e && e.message) || 'The sheet refused the save.'; err.hidden = false; if (e && e.error === 'changed') load(); }
+    } finally {
+      saving = false; $('f-save').disabled = false; $('f-save').textContent = wasEditing ? 'Save changes' : 'Add to sheet';
+    }
+  });
+
+  /* ---------- start ---------- */
+  if (!API) { $('login-err').textContent = 'Not connected to the sheet yet. Add the Apps Script URL to expenses/config.js.'; $('login-btn').disabled = true; }
+  const saved = store.get();
+  if (saved && API) { password = saved; call('login').then(openApp).catch(() => { password = ''; store.set(''); showGate(''); }); }
+  else showGate($('login-err').textContent);
+})();
+</script>
+</body>
+</html>
