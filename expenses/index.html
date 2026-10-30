@@ -23,6 +23,7 @@
   --burgundy:#d77f8d; --burgundy-ink:#1a1214; --gold:#d8bd84; --rose:#7a3f49; --soft:#2d2023;
   --ok:#6fcf91; --warn:#e3a54a; --bad:#f08079; color-scheme:dark}}
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html,body{margin:0}
 body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 .wrap{max-width:72rem;margin:0 auto;padding-block:24px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:20px}
@@ -56,7 +57,7 @@ input,select,textarea{font:inherit;font-size:.95rem;color:var(--ink);background:
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,12.5rem),1fr));gap:12px}
 .kpi .l{font-size:.78rem;color:var(--muted)}
 .kpi .v{font-family:var(--f-display);font-size:1.65rem;font-variant-numeric:tabular-nums;margin-top:4px;line-height:1.15;overflow-wrap:anywhere}
-.kpi .n{font-size:.78rem;color:var(--muted);margin-top:4px}
+.kpi .kn{font-size:.78rem;color:var(--muted);margin-top:4px}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,22rem),1fr));gap:12px}
 .legend{display:flex;gap:14px;font-size:.78rem;color:var(--muted);margin-bottom:10px}
 .legend i{display:inline-block;width:.7rem;height:.7rem;border-radius:3px;margin-right:6px;vertical-align:-1px}
@@ -70,7 +71,7 @@ input,select,textarea{font:inherit;font-size:.95rem;color:var(--ink);background:
 .months{display:flex;align-items:flex-end;gap:8px;height:190px;padding-top:22px;border-bottom:1px solid var(--line)}
 .mcol{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;position:relative}
 .mcol .b{width:min(100%,34px);background:var(--burgundy);border-radius:5px 5px 0 0;min-height:1px}
-.mcol .t{position:absolute;font-size:.7rem;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.mcol .t{margin-bottom:3px;line-height:15px;font-size:.7rem;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
 .mlabels{display:flex;gap:8px;margin-top:6px}
 .mlabels span{flex:1 1 0;min-width:0;text-align:center;font-size:.72rem;color:var(--muted);white-space:nowrap;overflow:hidden}
 .meter .big{font-family:var(--f-display);font-size:2rem;font-variant-numeric:tabular-nums}
@@ -89,7 +90,26 @@ tbody tr.click{cursor:pointer} tbody tr.click:hover{background:var(--soft)}
 .pill{display:inline-block;font-size:.72rem;padding:2px 8px;border-radius:999px;background:var(--soft);white-space:nowrap}
 .pill.full{color:var(--ok)} .pill.due{color:var(--warn)}
 .empty{color:var(--muted);text-align:center;padding:22px 10px}
-@media (max-width:640px){.hide-n{display:none}}
+.kpi{text-align:left}
+@media (max-width:640px){
+  .hide-n{display:none}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .kpis .kpi:first-child{grid-column:1/-1}
+  .kpi{padding:14px}
+  .kpi .v{font-size:1.3rem}
+  .tablebox{max-height:none}
+  .tablebox thead{display:none}
+  .tablebox table,.tablebox tbody{display:block}
+  .tablebox tr{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:12px;row-gap:2px;padding:11px 16px;border-bottom:1px solid var(--line)}
+  .tablebox td{border:0;padding:0!important}
+  .tablebox td.empty{grid-column:1/-1;padding:14px 0!important}
+  .tablebox .c-vendor{grid-column:1;grid-row:1;font-weight:600}
+  .tablebox .c-main{grid-column:2;grid-row:1;font-weight:600}
+  .tablebox .c-item{grid-column:1;grid-row:2;color:var(--muted)}
+  .tablebox .c-sub{grid-column:2;grid-row:2;color:var(--muted)}
+  .tablebox .c-date{grid-column:1/-1;grid-row:3;color:var(--muted);font-size:.78rem}
+  .tablebox .hide-m{display:none}
+}
 
 /* form sheet */
 .sheet{position:fixed;inset:0;z-index:20;display:flex;justify-content:flex-end;background:rgba(30,15,18,.42)}
@@ -144,11 +164,11 @@ tbody tr.click{cursor:pointer} tbody tr.click:hover{background:var(--soft)}
   <div class="banner" id="banner" hidden></div>
 
   <section class="kpis" aria-label="Headline figures">
-    <div class="card kpi"><div class="l">Paid so far</div><div class="v" id="k-paid">—</div><div class="n" id="k-rate">Dollars converted at the sheet's rate</div></div>
-    <div class="card kpi"><div class="l">Still owed</div><div class="v" id="k-owed">—</div><div class="n" id="k-vendors">&nbsp;</div></div>
-    <div class="card kpi"><div class="l">Known total cost</div><div class="v" id="k-total">—</div><div class="n">Paid plus owed, for items logged so far</div></div>
-    <div class="card kpi"><div class="l">Left after paying balances</div><div class="v" id="k-left">—</div><div class="n" id="k-account">&nbsp;</div></div>
-    <div class="card kpi"><div class="l">Days to go</div><div class="v" id="k-days">—</div><div class="n" id="k-date">&nbsp;</div></div>
+    <div class="card kpi"><div class="l">Paid so far</div><div class="v" id="k-paid">—</div><div class="kn" id="k-rate">Dollars converted at the sheet's rate</div></div>
+    <div class="card kpi"><div class="l">Still owed</div><div class="v" id="k-owed">—</div><div class="kn" id="k-vendors">&nbsp;</div></div>
+    <div class="card kpi"><div class="l">Known total cost</div><div class="v" id="k-total">—</div><div class="kn">Paid plus owed, for items logged so far</div></div>
+    <div class="card kpi"><div class="l">Left after paying balances</div><div class="v" id="k-left">—</div><div class="kn" id="k-account">&nbsp;</div></div>
+    <div class="card kpi"><div class="l">Days to go</div><div class="v" id="k-days">—</div><div class="kn" id="k-date">&nbsp;</div></div>
   </section>
 
   <section class="grid">
@@ -416,8 +436,8 @@ tbody tr.click{cursor:pointer} tbody tr.click:hover{background:var(--soft)}
       const name = new Date(y, mo - 1, 1).toLocaleDateString('en', {month: 'short'}) + (list.length <= 6 ? ' ' + String(y).slice(2) : '');
       const col = el('div', 'mcol'); col.title = `${new Date(y, mo - 1, 1).toLocaleDateString('en', {month: 'long', year: 'numeric'})}: ${ngn(m.v)}`;
       const h = m.v / max * 100;
-      const bar = el('div', 'b'); bar.style.height = `calc(${h}% - ${h ? 18 : 0}px)`;
-      if (showVals && m.v) { const t = el('div', 't', compact(m.v)); t.style.bottom = `calc(${h}% - 14px)`; col.append(t); }
+      if (showVals && m.v) col.append(el('div', 't', compact(m.v)));
+      const bar = el('div', 'b'); bar.style.height = `calc((100% - 18px) * ${h / 100})`;
       col.append(bar); box.append(col);
       labels.append(el('span', null, name));
     });
@@ -443,7 +463,7 @@ tbody tr.click{cursor:pointer} tbody tr.click:hover{background:var(--soft)}
     if (!rows.length) { const tr = el('tr'); const td = el('td', 'empty', 'Nothing is owed right now.'); td.colSpan = 5; tr.append(td); tb.append(tr); return; }
     rows.forEach((r) => {
       const tr = el('tr', 'click'); tr.tabIndex = 0;
-      tr.append(el('td', null, r.vendor), el('td', null, r.item), el('td', 'hide-n', r.event), el('td', 'n', money(r.currency, r.owed0)), el('td', 'n', ngn(r.owedN)));
+      tr.append(el('td', 'c-vendor', r.vendor), el('td', 'c-item', r.item), el('td', 'hide-n', r.event), el('td', 'n c-main', money(r.currency, r.owed0)), el('td', 'n c-sub', ngn(r.owedN)));
       bindEdit(tr, r); tb.append(tr);
     });
   }
@@ -467,8 +487,8 @@ tbody tr.click{cursor:pointer} tbody tr.click:hover{background:var(--soft)}
     rows.forEach((r) => {
       const tr = el('tr', 'click'); tr.tabIndex = 0;
       const st = el('td', 'hide-n'); st.append(el('span', 'pill ' + (/full/i.test(r.status) ? 'full' : r.owed0 ? 'due' : ''), r.status || '—'));
-      tr.append(el('td', null, fmtDate(r.date)), el('td', null, r.vendor), el('td', null, r.item), el('td', 'hide-n', r.category), el('td', 'hide-n', r.event),
-        el('td', 'n', money(r.currency, r.total0)), el('td', 'n', money(r.currency, r.paid0)), el('td', 'n', r.owed0 ? money(r.currency, r.owed0) : '—'), st);
+      tr.append(el('td', 'c-date', fmtDate(r.date)), el('td', 'c-vendor', r.vendor), el('td', 'c-item', r.item), el('td', 'hide-n', r.category), el('td', 'hide-n', r.event),
+        el('td', 'n c-main', money(r.currency, r.total0)), el('td', 'n hide-m', money(r.currency, r.paid0)), el('td', 'n c-sub', r.owed0 ? money(r.currency, r.owed0) + ' due' : 'Paid'), st);
       bindEdit(tr, r); tb.append(tr);
     });
   }
