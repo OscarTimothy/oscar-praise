@@ -124,7 +124,9 @@ tbody tr.click{cursor:pointer} tbody tr.click:hover{background:var(--soft)}
 .calc b{font-variant-numeric:tabular-nums;font-size:1.05rem}
 .ferr{grid-column:1/-1;color:var(--bad);font-size:.88rem;margin:0}
 .fbar{grid-column:1/-1;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
-.head-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.head-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+button.small{padding:5px 12px;font-size:.8rem}
+.sheet .panel.narrow{height:auto;max-height:100%;align-self:center;margin:auto;border:1px solid var(--line);border-radius:var(--r);width:min(calc(100% - 32px),26rem);padding:22px 18px}
 @media (max-width:420px){.sheet form{grid-template-columns:minmax(0,1fr)}}
 .skel{color:transparent!important;background:var(--soft);border-radius:6px}
 @media (prefers-reduced-motion:no-preference){.track div,.mcol .b{transition:width .4s ease,height .4s ease}}
@@ -179,7 +181,10 @@ tbody tr.click{cursor:pointer} tbody tr.click:hover{background:var(--soft)}
       <div class="bars" id="by-category"></div>
     </div>
     <div class="card meter">
-      <h2>Account vs what is owed</h2>
+      <div class="head-row">
+        <h2>Account vs what is owed</h2>
+        <button type="button" id="acct-open" class="small">Update balance</button>
+      </div>
       <p class="note">Open balances as a share of the account balance on the Summary tab</p>
       <div id="meter"></div>
     </div>
@@ -257,6 +262,22 @@ tbody tr.click{cursor:pointer} tbody tr.click:hover{background:var(--soft)}
   </div>
 </div>
 
+<div class="sheet" id="acct-sheet" hidden>
+  <div class="panel narrow" role="dialog" aria-modal="true" aria-labelledby="a-title">
+    <h2 id="a-title">Update account balance</h2>
+    <p class="note" id="a-current">&nbsp;</p>
+    <form id="a-form" novalidate>
+      <label class="full">New balance in naira<span class="amount"><span>₦</span><input id="a-amount" inputmode="decimal" placeholder="0" autocomplete="off"></span></label>
+      <div class="calc" id="a-preview-row"><span>Left after paying balances</span><b id="a-preview">—</b></div>
+      <p class="ferr" id="a-err" role="alert" hidden></p>
+      <div class="fbar">
+        <button type="button" id="a-cancel">Cancel</button>
+        <button type="submit" class="primary" id="a-save">Save balance</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script src="config.js"></script>
 <script>
 (() => {
@@ -305,7 +326,7 @@ tbody tr.click{cursor:pointer} tbody tr.click:hover{background:var(--soft)}
 
   /* ---------- login ---------- */
   function showGate(msg) {
-    $('app').hidden = true; $('sheet').hidden = true; $('gate').hidden = false;
+    $('app').hidden = true; $('sheet').hidden = true; $('acct-sheet').hidden = true; $('gate').hidden = false;
     $('login-err').textContent = msg || ''; $('pw').value = ''; $('pw').focus();
   }
   $('login').addEventListener('submit', async (ev) => {
@@ -578,6 +599,49 @@ tbody tr.click{cursor:pointer} tbody tr.click:hover{background:var(--soft)}
     } finally {
       saving = false; $('f-save').disabled = false; $('f-save').textContent = wasEditing ? 'Save changes' : 'Add to sheet';
     }
+  });
+
+  /* ---------- account balance ---------- */
+  let acctSaving = false;
+  function acctPreview() {
+    const v = num($('a-amount').value);
+    if (!data || v == null || Number.isNaN(v)) { $('a-preview').textContent = '—'; return; }
+    const left = v - derive().owed;
+    $('a-preview').textContent = ngn(left);
+    $('a-preview').style.color = left < 0 ? 'var(--bad)' : '';
+  }
+  function openAcct() {
+    if (!data) return;
+    $('a-current').textContent = data.account == null ? 'No balance is on the Summary tab yet.' : `Currently ${ngn(data.account)} on the Summary tab.`;
+    $('a-amount').value = data.account == null ? '' : Math.round(data.account).toLocaleString('en');
+    $('a-err').hidden = true;
+    acctPreview();
+    $('acct-sheet').hidden = false; document.body.style.overflow = 'hidden';
+    setTimeout(() => { $('a-amount').focus(); $('a-amount').select(); }, 30);
+  }
+  function closeAcct() { $('acct-sheet').hidden = true; document.body.style.overflow = ''; }
+  $('acct-open').addEventListener('click', openAcct);
+  $('a-cancel').addEventListener('click', closeAcct);
+  $('acct-sheet').addEventListener('click', (e) => { if (e.target === $('acct-sheet') && !acctSaving) closeAcct(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('acct-sheet').hidden && !acctSaving) closeAcct(); });
+  $('a-amount').addEventListener('input', acctPreview);
+  $('a-form').addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    if (acctSaving) return;
+    const v = num($('a-amount').value), err = $('a-err');
+    if (v == null || Number.isNaN(v) || v < 0) { err.textContent = 'Enter the balance as a number, for example 16,691,522.'; err.hidden = false; return; }
+    err.hidden = true; acctSaving = true; $('a-save').disabled = true; $('a-save').textContent = 'Saving…';
+    try {
+      await call('account', {amount: v});
+      closeAcct();
+      await load();
+      banner(`Account balance updated to ${ngn(v)}.`, 'ok');
+    } catch (e) {
+      if (e && (e.error === 'wrong_password' || e.error === 'locked')) { closeAcct(); handle(e); }
+      else if (e && e.error === 'network') { err.textContent = 'The sheet did not confirm the save. Close this, press Reload and check the balance before trying again.'; err.hidden = false; }
+      else if (e && e.error === 'bad_request') { err.textContent = 'The sheet does not know how to update the balance yet. The Apps Script needs the latest version deployed.'; err.hidden = false; }
+      else { err.textContent = (e && e.message) || 'The sheet refused the update.'; err.hidden = false; }
+    } finally { acctSaving = false; $('a-save').disabled = false; $('a-save').textContent = 'Save balance'; }
   });
 
   /* ---------- start ---------- */

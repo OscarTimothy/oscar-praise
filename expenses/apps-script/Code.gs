@@ -49,6 +49,8 @@ function doPost(e) {
         return json(withLock_(() => addExpense_(body.expense)));
       case 'update':
         return json(withLock_(() => updateExpense_(body.row, body.expect, body.expense)));
+      case 'account':
+        return json(withLock_(() => setAccountBalance_(body.amount)));
       default:
         return json({ ok: false, error: 'bad_request', message: 'Unknown action.' });
     }
@@ -190,6 +192,21 @@ function writeRow_(sh, row, v) {
     v.total === null ? '' : v.total, v.paid === null ? '' : v.paid,
   ]]);
   sh.getRange(row, COL.status, 1, 2).setValues([[v.status, v.notes]]);
+}
+
+// Writes the "Account balance (₦)" value on the Summary tab (column C beside the label in B).
+function setAccountBalance_(amount) {
+  const n = Number(amount);
+  if (amount === null || amount === '' || !isFinite(n) || n < 0 || n >= 1e13) {
+    return { ok: false, error: 'invalid', message: 'Enter the balance as a number of zero or more.' };
+  }
+  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SUMMARY_TAB);
+  const last = Math.min(sh.getLastRow(), 80);
+  const labels = sh.getRange(1, 2, last, 1).getValues();
+  const i = labels.findIndex((r) => String(r[0] || '').trim().toLowerCase().indexOf('account balance (') === 0);
+  if (i < 0) return { ok: false, error: 'not_found', message: 'Could not find the Account balance row on the Summary tab.' };
+  sh.getRange(i + 1, 3).setValue(n);
+  return { ok: true, account: n };
 }
 
 function nextEmptyRow_(sh) {
